@@ -167,10 +167,6 @@ void kupyna512_final(struct kupyna512_ctx_t* ctx, uint8_t* hash)
 
 void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits)
 {
-    if (bits <= 256) {
-        return;
-    }
-
     if (bits > 512) {
         bits = 512;
     }

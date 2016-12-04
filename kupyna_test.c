@@ -71,6 +71,18 @@ static void kupyna256_chunk()
     }
     kupyna256_final(&ctx, r1);
     CU_ASSERT(!memcmp(result, r1, 32));
+
+    /* Coverage */
+    kupyna256_init(&ctx);
+    kupyna256_update(&ctx, zero, 64);
+    kupyna256_update(&ctx, zero + 64, 53);
+    kupyna256_final(&ctx, result);
+
+    kupyna256_init(&ctx);
+    kupyna256_update(&ctx, zero, 64);
+    kupyna256_update(&ctx, zero + 64, 53);
+    kupyna256_final2(&ctx, r1, 257);
+    CU_ASSERT(!memcmp(result, r1, 32));
 }
 
 static void kupyna256_512()
@@ -220,6 +232,18 @@ static void kupyna512_chunk()
     }
     kupyna512_final(&ctx, r1);
     CU_ASSERT(!memcmp(result, r1, 64));
+
+    /* Coverage */
+    kupyna512_init(&ctx);
+    kupyna512_update(&ctx, zero, 128);
+    kupyna512_update(&ctx, zero + 128, 117);
+    kupyna512_final(&ctx, result);
+
+    kupyna512_init(&ctx);
+    kupyna512_update(&ctx, zero, 128);
+    kupyna512_update(&ctx, zero + 128, 117);
+    kupyna512_final2(&ctx, r1, 513);
+    CU_ASSERT(!memcmp(result, r1, 32));
 }
 
 static void kupyna512_512()
