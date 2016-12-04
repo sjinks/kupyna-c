@@ -1,1 +1,4 @@
 *.o
+*.gcda
+*.gcno
+kupyna_test
