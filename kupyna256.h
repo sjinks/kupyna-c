@@ -5,7 +5,7 @@
 #if defined(__SSE2__)
 #include <emmintrin.h>
 #elif defined(__SSE__)
-#include <mmintrin.h>
+#include <xmmintrin.h>
 #endif
 
 union uint512_t {
