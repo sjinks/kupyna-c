@@ -1,0 +1,15 @@
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get -qq -y install libcunit1-dev
+
+script:
+  - make CFLAGS="-Wall -O2" test
