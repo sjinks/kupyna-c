@@ -16,7 +16,9 @@ script:
   - make -B CFLAGS="-Wall -O0 --coverage" LDFLAGS="--coverage" test
   - make -B CFLAGS="-Wall -O0 --coverage -mno-sse -mno-sse2" LDFLAGS="--coverage" test
   - make -B CFLAGS="-Wall -O0 --coverage -mno-sse2" LDFLAGS="--coverage" test
-  - gcov *.c
+  - export GCOVEXE=gcov
+  - export GCOVARGS=""
+  - [ "$CC" == "clang" ] && { export GCOVEXE=llvm-cov; export GCOVARGS="gcov" }
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -x "$GCOVEXE" -a "$GCOVARGS"
