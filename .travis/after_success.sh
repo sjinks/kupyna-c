@@ -1,9 +1,3 @@
 #!/bin/bash
 
-if [ "$CC" = "gcc" ]; then
-	gcov *.c
-else
-	llvm-cov gcov *.c
-fi
-
-/bin/bash <(curl -s https://codecov.io/bash) -X gcov
+/bin/bash <(curl -s https://codecov.io/bash) -s coverage-default/ -s coverage-nosse/ -s coverage-nosse2/ -X gcov

@@ -12,10 +12,7 @@ before_install:
   - sudo apt-get -qq -y install libcunit1-dev
 
 script:
-  - make CFLAGS="-Wall -O2" test
-  - make -B CFLAGS="-Wall -O0 --coverage" LDFLAGS="--coverage" test
-  - make -B CFLAGS="-Wall -O0 --coverage -mno-sse -mno-sse2" LDFLAGS="--coverage" test
-  - make -B CFLAGS="-Wall -O0 --coverage -mno-sse2" LDFLAGS="--coverage" test
+  - ./.travis/script.sh
 
 after_success:
   - ./.travis/after_success.sh
