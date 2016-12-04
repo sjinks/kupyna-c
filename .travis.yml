@@ -1,18 +1,23 @@
 language: c
 
+env:
+  global:
+    - secure: "SHBLnYHdvhdaKf6rQkmNRRv8SYSA2NGtQ18kcEOqoUAhEm/p2/QkXHeYx2ynIj7blz2lJkhbAGEbxx5Z8UiLsGEgI+9Vi8meFJKhW6VonKa1LY9OEXAsBbxNKYAFs9FHv67RUgBDA/7fTexQgB8v6dJApzm5TUoMduru+Kbzk9PaFWY/pxjHa3MokvnOE3LVriyuqdPgKrQ7pmLZTBUP2C+jQl3fDe7qvxO6Gg3Yzf4jmyQ0BjgG07GPw1BbsfrB0vkDekyiN3JROEFH5+Wi7jft8fA362H1VSuvi7ZJ4EpmXnqX3TM8ufSHX7MFUHYwB1Nhols3xlGQUHiPMGQFg1KXh9tpP6eFAVuogxTA9KAFIKI4qiI3WdGvn+ESczD6sOyjRDTNFitInarT7vRc8JGQZSKMQ82U3n5Zs5fi2X3Ft6ie+oAL3GtCoy7GB7NMCXqvh3ILLVPiYKh6tAmfV3iOgc3Rm7eLGGP53LgxmfnV3eCGCVB+AowxLk+DL74DcmGUEAqQSZZ/xmsRllPRyJlXfp4NOZoU2UIBpd9Y0ef/aDCzpuz3FBIlNowaHFxmeD+9rLN4yr96rsz457RhLrZSh4JDIlK3qq7NCAv0TxeZTnTg8jyS8KJBzGoHHLxRhElXoEdro5GROxEL7SdCrdHKgN/u3DwaSEWsv6uO+jM="
+
 compiler:
   - gcc
-  - clang
 
 sudo: required
 dist: trusty
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get -qq -y install libcunit1-dev
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
-script:
-  - ./.travis/script.sh
-
-after_success:
-  - ./.travis/after_success.sh
+addons:
+  coverity_scan:
+    project:
+      name: "sjinks/kupyna-c"
+      description: "Build submitted via Travis CI"
+    notification_email: volodymyr@wildwolf.name
+    build_command: "make -j 4"
+    branch_pattern: coverity
