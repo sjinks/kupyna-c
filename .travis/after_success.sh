@@ -1,11 +1,9 @@
 #!/bin/bash
 
-if [ "$CC" = "clang" ]; then
-	GCOVEXE=gcov
-	GCOVARGS=""
+if [ "$CC" = "gcc" ]; then
+	gcov *.c
 else
-	GCOVEXE=llvm-cov
-	GCOVARGS="gcov"
+	llvm-cov gcov *.c
 fi
 
-/bin/bash <(curl -s https://codecov.io/bash) -x "$GCOVEXE" -a "$GCOVARGS"
+/bin/bash <(curl -s https://codecov.io/bash) -X gcov
