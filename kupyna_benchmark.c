@@ -42,5 +42,13 @@ int main(int argc, char** argv)
     duration = (double)(t2 - t1) / CLOCKS_PER_SEC;
     printf("kupyna512: %.3f sec, %.3f MBps\n", duration, BUFFER_MIB/duration);
 
+    t1 = clock();
+    kupyna512_init(&k512);
+    kupyna512_update_aligned(&k512, buf, BUFFER_SIZE);
+    kupyna512_final(&k512, h);
+    t2 = clock();
+    duration = (double)(t2 - t1) / CLOCKS_PER_SEC;
+    printf("kupyna512a: %.3f sec, %.3f MBps\n", duration, BUFFER_MIB/duration);
+
     return 0;
 }
