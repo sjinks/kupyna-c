@@ -9,7 +9,7 @@ dist: trusty
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -qq -y install libcunit1-dev
+  - sudo apt-get -qq -y install libcunit1-dev g++-multilib libc6-dev-i386
 
 script:
   - ./.travis/script.sh
