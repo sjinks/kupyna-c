@@ -159,14 +159,18 @@ static void transform(struct kupyna512_ctx_t* ctx, const union uint1024_t* b)
     }
 
 #if defined(__SSE2__)
-    for (uint_fast32_t column = 0; column < 8; column += 2) {
+    for (uint_fast32_t column = 0; column < 8; column += 4) {
         ctx->h.h[column]   = _mm_xor_si128(ctx->h.h[column],   _mm_xor_si128(AQ1.h[column],   AP1.h[column]));
         ctx->h.h[column+1] = _mm_xor_si128(ctx->h.h[column+1], _mm_xor_si128(AQ1.h[column+1], AP1.h[column+1]));
+        ctx->h.h[column+2] = _mm_xor_si128(ctx->h.h[column+2], _mm_xor_si128(AQ1.h[column+2], AP1.h[column+2]));
+        ctx->h.h[column+3] = _mm_xor_si128(ctx->h.h[column+3], _mm_xor_si128(AQ1.h[column+3], AP1.h[column+3]));
     }
 #elif defined(__SSE__)
-    for (uint_fast32_t column = 0; column < 8; column += 2) {
-        ctx->h.h[column]   = _mm_xor_ps(AP1.h[column],   _mm_xor_ps(AQ1.h[column],   ctx->h.h[column]));
-        ctx->h.h[column+1] = _mm_xor_ps(AP1.h[column+1], _mm_xor_ps(AQ1.h[column+1], ctx->h.h[column+1]));
+    for (uint_fast32_t column = 0; column < 8; column += 4) {
+        ctx->h.h[column]   = _mm_xor_ps(ctx->h.h[column],   _mm_xor_ps(AQ1.h[column],   AP1.h[column]));
+        ctx->h.h[column+1] = _mm_xor_ps(ctx->h.h[column+1], _mm_xor_ps(AQ1.h[column+1], AP1.h[column+1]));
+        ctx->h.h[column+2] = _mm_xor_ps(ctx->h.h[column+2], _mm_xor_ps(AQ1.h[column+2], AP1.h[column+2]));
+        ctx->h.h[column+3] = _mm_xor_ps(ctx->h.h[column+3], _mm_xor_ps(AQ1.h[column+3], AP1.h[column+3]));
     }
 #else
     for (uint_fast32_t column = 0; column < 16; ++column) {
