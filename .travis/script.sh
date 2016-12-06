@@ -34,12 +34,12 @@ rm -f *.gcno *.gcda
 make clean
 
 echo "SSE2 (64 bit)"
-make -q -B CFLAGS="-Wall -O2 -msse2" benchmark
+make -s -B CFLAGS="-Wall -O2 -msse2" benchmark
 echo "SSE (64 bit)"
-make -q -B CFLAGS="-Wall -O2 -mno-sse2 -msse" benchmark
+make -s -B CFLAGS="-Wall -O2 -mno-sse2 -msse" benchmark
 echo "SSE2 (32 bit)"
-make -q -B CFLAGS="-Wall -O2 -msse2 -m32" LDFLAGS="-m32" benchmark
+make -s -B CFLAGS="-Wall -O2 -msse2 -m32" LDFLAGS="-m32" benchmark
 echo "SSE (32 bit)"
-make -q -B CFLAGS="-Wall -O2 -mno-sse2 -msse -m32" LDFLAGS="-m32" benchmark
+make -s -B CFLAGS="-Wall -O2 -mno-sse2 -msse -m32" LDFLAGS="-m32" benchmark
 echo "Raw (32 bit)"
-make -q -B CFLAGS="-Wall -O2 -mno-sse2 -mno-sse -m32" LDFLAGS="-m32" benchmark
+make -s -B CFLAGS="-Wall -O2 -mno-sse2 -mno-sse -m32" LDFLAGS="-m32" benchmark
