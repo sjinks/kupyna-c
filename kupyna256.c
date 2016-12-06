@@ -194,7 +194,7 @@ void kupyna256_update(struct kupyna256_ctx_t* ctx, const uint8_t* data, size_t l
     ctx->pos   += len;
     ctx->total += len * 8;
 
-#if defined(__MMX__) && !defined(__SSE__)
+#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
 #endif
 }
@@ -223,7 +223,7 @@ void kupyna256_update_aligned(struct kupyna256_ctx_t* ctx, const uint8_t* data, 
     ctx->pos   += len;
     ctx->total += len * 8;
 
-#if defined(__MMX__) && !defined(__SSE__)
+#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
 #endif
 }
@@ -246,7 +246,7 @@ void kupyna256_final(struct kupyna256_ctx_t* ctx, uint8_t* hash)
 
     memcpy(hash, ctx->h.b + 64 - 256/8, 256/8);
 
-#if defined(__MMX__) && !defined(__SSE__)
+#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
 #endif
 }
@@ -273,7 +273,7 @@ void kupyna256_final2(struct kupyna256_ctx_t* ctx, uint8_t* hash, size_t bits)
 
     memcpy(hash, ctx->h.b + 64 - bits/8, bits/8);
 
-#if defined(__MMX__) && !defined(__SSE__)
+#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
 #endif
 }
