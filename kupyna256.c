@@ -79,6 +79,19 @@ static void transform(struct kupyna256_ctx_t* ctx)
     _mm_store_si128(AQ1.h + 1, m2);
     _mm_store_si128(AQ1.h + 2, m3);
     _mm_store_si128(AQ1.h + 3, m4);
+#elif defined(__SSE__)
+    __m128 m1 = _mm_load_ps((float*)(ctx->m.h));
+    __m128 m2 = _mm_load_ps((float*)(ctx->m.h + 1));
+    __m128 m3 = _mm_load_ps((float*)(ctx->m.h + 2));
+    __m128 m4 = _mm_load_ps((float*)(ctx->m.h + 3));
+    AP1.h[0] = _mm_xor_ps(ctx->h.h[0], m1);
+    AP1.h[1] = _mm_xor_ps(ctx->h.h[1], m2);
+    AP1.h[2] = _mm_xor_ps(ctx->h.h[2], m3);
+    AP1.h[3] = _mm_xor_ps(ctx->h.h[3], m4);
+    _mm_store_ps((float*)(AQ1.h),     m1);
+    _mm_store_ps((float*)(AQ1.h + 1), m2);
+    _mm_store_ps((float*)(AQ1.h + 2), m3);
+    _mm_store_ps((float*)(AQ1.h + 3), m4);
 #else
     for (uint_fast32_t column=0; column<8; ++column) {
         AP1.q[column] = ctx->h.q[column] ^ ctx->m.q[column];
