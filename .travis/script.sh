@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 if [ "$CC" = "gcc" ]; then
 	GCOV=gcov
 	ARGS=""
