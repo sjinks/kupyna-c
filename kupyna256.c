@@ -44,9 +44,20 @@ static void outputTransform(struct kupyna256_ctx_t* ctx)
         P(t2.q, t1.q, r + 1);
     }
 
-    for (int column = 0; column < 8; ++column) {
+#if defined(__SSE2__)
+    for (uint_fast32_t column=0; column<4; column+=2) {
+        ctx->h.h[column]   = _mm_xor_si128(ctx->h.h[column],   t1.h[column]);
+        ctx->h.h[column+1] = _mm_xor_si128(ctx->h.h[column+1], t1.h[column+1]);
+    }
+#elif defined(__SSE__)
+    for (uint_fast32_t column=0; column<4; ++column) {
+        ctx->h.h[column] = _mm_xor_ps(ctx->h.h[column], t1.h[column]);
+    }
+#else
+    for (uint_fast32_t column=0; column<8; ++column) {
         ctx->h.q[column] ^= t1.q[column];
     }
+#endif
 }
 
 static void transform(struct kupyna256_ctx_t* ctx)
@@ -55,10 +66,25 @@ static void transform(struct kupyna256_ctx_t* ctx)
     union uint512_t AP1;
     union uint512_t tmp;
 
-    for (int column = 0; column < 8; ++column) {
+#if defined(__SSE2__)
+    __m128i m1 = _mm_load_si128(ctx->m.h);
+    __m128i m2 = _mm_load_si128(ctx->m.h + 1);
+    __m128i m3 = _mm_load_si128(ctx->m.h + 2);
+    __m128i m4 = _mm_load_si128(ctx->m.h + 3);
+    AP1.h[0]   = _mm_xor_si128(ctx->h.h[0], m1);
+    AP1.h[1]   = _mm_xor_si128(ctx->h.h[1], m2);
+    AP1.h[2]   = _mm_xor_si128(ctx->h.h[2], m3);
+    AP1.h[3]   = _mm_xor_si128(ctx->h.h[3], m4);
+    _mm_store_si128(AQ1.h,     m1);
+    _mm_store_si128(AQ1.h + 1, m2);
+    _mm_store_si128(AQ1.h + 2, m3);
+    _mm_store_si128(AQ1.h + 3, m4);
+#else
+    for (uint_fast32_t column=0; column<8; ++column) {
         AP1.q[column] = ctx->h.q[column] ^ ctx->m.q[column];
         AQ1.q[column] = ctx->m.q[column];
     }
+#endif
 
     for (uint8_t r = 0; r < 10; r += 2) {
         P(AP1.q, tmp.q, r);
@@ -67,9 +93,21 @@ static void transform(struct kupyna256_ctx_t* ctx)
         Q(tmp.q, AQ1.q, r + 1);
     }
 
-    for (int column = 0; column < 8; ++column) {
+#if defined(__SSE2__)
+    ctx->h.h[0] = _mm_xor_si128(ctx->h.h[0], _mm_xor_si128(AQ1.h[0], AP1.h[0]));
+    ctx->h.h[1] = _mm_xor_si128(ctx->h.h[1], _mm_xor_si128(AQ1.h[1], AP1.h[1]));
+    ctx->h.h[2] = _mm_xor_si128(ctx->h.h[2], _mm_xor_si128(AQ1.h[2], AP1.h[2]));
+    ctx->h.h[3] = _mm_xor_si128(ctx->h.h[3], _mm_xor_si128(AQ1.h[3], AP1.h[3]));
+#elif defined(__SSE__)
+    ctx->h.h[0] = _mm_xor_ps(ctx->h.h[0], _mm_xor_ps(AQ1.h[0], AP1.h[0]));
+    ctx->h.h[1] = _mm_xor_ps(ctx->h.h[1], _mm_xor_ps(AQ1.h[1], AP1.h[1]));
+    ctx->h.h[2] = _mm_xor_ps(ctx->h.h[2], _mm_xor_ps(AQ1.h[2], AP1.h[2]));
+    ctx->h.h[3] = _mm_xor_ps(ctx->h.h[3], _mm_xor_ps(AQ1.h[3], AP1.h[3]));
+#else
+    for (uint_fast32_t column=0; column<8; ++column) {
         ctx->h.q[column] ^= AP1.q[column] ^ AQ1.q[column];
     }
+#endif
 }
 
 void kupyna256_init(struct kupyna256_ctx_t* ctx)
@@ -106,9 +144,8 @@ void kupyna256_final(struct kupyna256_ctx_t* ctx, uint8_t* hash)
         ctx->pos = 0;
     }
 
-    memset(ctx->m.b + ctx->pos, 0,           52 - ctx->pos);
+    memset(ctx->m.b + ctx->pos, 0,           64 - ctx->pos);
     memcpy(ctx->m.b + 52,       &ctx->total, sizeof(uint64_t));
-    memset(ctx->m.b + 60,       0,           4);
 
     transform(ctx);
     outputTransform(ctx);
@@ -130,9 +167,8 @@ void kupyna256_final2(struct kupyna256_ctx_t* ctx, uint8_t* hash, size_t bits)
         ctx->pos = 0;
     }
 
-    memset(ctx->m.b + ctx->pos, 0,           52 - ctx->pos);
+    memset(ctx->m.b + ctx->pos, 0,           64 - ctx->pos);
     memcpy(ctx->m.b + 52,       &ctx->total, sizeof(uint64_t));
-    memset(ctx->m.b + 60,       0,           4);
 
     transform(ctx);
     outputTransform(ctx);
