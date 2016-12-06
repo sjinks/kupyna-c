@@ -39,7 +39,7 @@ static inline void G2(const uint64_t* x, uint64_t* y, uint64_t round)
     y[7] = (T0[(uint8_t)x[7]] ^ T1[(uint8_t)(x[6] >> 8)] ^ T2[(uint8_t)(x[5] >> 16)] ^ T3[(uint8_t)(x[4] >> 24)] ^ T4[(uint8_t)(x[3] >> 32)] ^ T5[(uint8_t)(x[2] >> 40)] ^ T6[(uint8_t)(x[1] >> 48)] ^ T7[(uint8_t)(x[0] >> 56)]) + (0x00F0F0F0F0F0F0F3ull ^ (((uint64_t)(((7 - 7) * 0x10) ^ round)) << 56));
 }
 
-static void P(uint64_t* x, uint64_t* y, uint64_t round)
+static inline void P(uint64_t* x, uint64_t* y, uint64_t round)
 {
     for (uint_fast32_t idx=0; idx<8; ++idx) {
         x[idx] ^= (idx << 4) ^ round;
@@ -49,7 +49,7 @@ static void P(uint64_t* x, uint64_t* y, uint64_t round)
     G(y, x);
 }
 
-static void Q(uint64_t* x, uint64_t* y, uint64_t round)
+static inline void Q(uint64_t* x, uint64_t* y, uint64_t round)
 {
     for (uint_fast32_t j = 0; j < 8; ++j) {
         x[j] += (0x00F0F0F0F0F0F0F3ULL ^ (((uint64_t)(((7 - j) * 0x10) ^ round)) << 56));
