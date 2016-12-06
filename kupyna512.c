@@ -85,10 +85,25 @@ static void transform(struct kupyna512_ctx_t* ctx)
         AP1.h[column+1] = _mm_xor_si128(ctx->h.h[column+1], m2);
         AP1.h[column+2] = _mm_xor_si128(ctx->h.h[column+2], m3);
         AP1.h[column+3] = _mm_xor_si128(ctx->h.h[column+3], m4);
-        _mm_store_si128(AQ1.h + column,     m1);
-        _mm_store_si128(AQ1.h + column + 1, m2);
-        _mm_store_si128(AQ1.h + column + 2, m3);
-        _mm_store_si128(AQ1.h + column + 3, m4);
+        _mm_stream_si128(AQ1.h + column,     m1);
+        _mm_stream_si128(AQ1.h + column + 1, m2);
+        _mm_stream_si128(AQ1.h + column + 2, m3);
+        _mm_stream_si128(AQ1.h + column + 3, m4);
+    }
+#elif defined(__SSE__)
+    for (uint_fast32_t column = 0; column < 8; column += 4) {
+        __m128 m1 = _mm_load_ps((float*)(ctx->m.h + column));
+        __m128 m2 = _mm_load_ps((float*)(ctx->m.h + column + 1));
+        __m128 m3 = _mm_load_ps((float*)(ctx->m.h + column + 2));
+        __m128 m4 = _mm_load_ps((float*)(ctx->m.h + column + 3));
+        AP1.h[column]   = _mm_xor_ps(ctx->h.h[column],   m1);
+        AP1.h[column+1] = _mm_xor_ps(ctx->h.h[column+1], m2);
+        AP1.h[column+2] = _mm_xor_ps(ctx->h.h[column+2], m3);
+        AP1.h[column+3] = _mm_xor_ps(ctx->h.h[column+3], m4);
+        _mm_stream_ps((float*)(AQ1.h + column),     m1);
+        _mm_stream_ps((float*)(AQ1.h + column + 1), m2);
+        _mm_stream_ps((float*)(AQ1.h + column + 2), m3);
+        _mm_stream_ps((float*)(AQ1.h + column + 3), m4);
     }
 #else
     for (uint_fast32_t column = 0; column < 16; ++column) {
