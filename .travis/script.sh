@@ -26,12 +26,15 @@ mkdir -p coverage-sse
 mv *.gcov coverage-sse/
 rm -f *.gcno *.gcda
 
-make clean
-make -B CFLAGS="-Wall -O0 --coverage -mmmx -mno-sse -mno-sse2" LDFLAGS="--coverage" test
-$GCOV $ARGS *.c
-mkdir -p coverage-mmx
-mv *.gcov coverage-mmx/
-rm -f *.gcno *.gcda
+if [ "$CC" = "clang" ]; then
+# gcc complains (64 bit): /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h:60:1: error: SSE register return with SSE disabled
+	make clean
+	make -B CFLAGS="-Wall -O0 --coverage -mmmx -mno-sse -mno-sse2" LDFLAGS="--coverage" test
+	$GCOV $ARGS *.c
+	mkdir -p coverage-mmx
+	mv *.gcov coverage-mmx/
+	rm -f *.gcno *.gcda
+fi
 
 make clean
 make -B CFLAGS="-Wall -O0 --coverage -mno-mmx -mno-sse -mno-sse2" LDFLAGS="--coverage" test
@@ -39,7 +42,6 @@ $GCOV $ARGS *.c
 mkdir -p coverage-raw
 mv *.gcov coverage-raw/
 rm -f *.gcno *.gcda
-
 make clean
 
 echo "SSE2 (64 bit)"
