@@ -4,8 +4,8 @@
 #include "kupyna256.h"
 #include "kupyna512.h"
 
-static const uint8_t test_8[1] = { 0xFF };
-static const uint8_t test[2048 / 8] = {
+_Alignas(16) static const uint8_t test_8[1] = { 0xFF };
+_Alignas(16) static const uint8_t test[2048 / 8] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
     0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
     0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -96,7 +96,11 @@ static void kupyna256_512()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test, 512 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test, 512 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -141,7 +145,11 @@ static void kupyna256_8()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test_8, 8 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test_8, 8 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -156,7 +164,11 @@ static void kupyna256_760()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test, 760 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test, 760 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -259,7 +271,11 @@ static void kupyna512_512()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 512 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 512 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -276,7 +292,11 @@ static void kupyna512_1024()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1024 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1024 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -293,7 +313,11 @@ static void kupyna512_2048()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 2048 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 2048 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -310,7 +334,11 @@ static void kupyna512_8()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test_8, 8 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test_8, 8 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -327,7 +355,11 @@ static void kupyna512_1536()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1536 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1536 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -360,7 +392,11 @@ static void kupyna304_1024()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1024 / 8);
     kupyna512_final2(&ctx, result, 304);
+    CU_ASSERT(!memcmp(result, expected, 38));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1024 / 8);
+    kupyna512_final2(&ctx, result, 304);
     CU_ASSERT(!memcmp(result, expected, 38));
 }
 
@@ -376,7 +412,11 @@ static void kupyna384_760()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 760 / 8);
     kupyna512_final2(&ctx, result, 384);
+    CU_ASSERT(!memcmp(result, expected, 48));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 760 / 8);
+    kupyna512_final2(&ctx, result, 384);
     CU_ASSERT(!memcmp(result, expected, 48));
 }
 

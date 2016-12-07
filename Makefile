@@ -12,6 +12,9 @@ kupyna_test: kupyna512.o kupyna256.o kupyna_tables.o kupyna_test.o
 kupyna_benchmark: kupyna512.o kupyna256.o kupyna_tables.o kupyna_benchmark.o
 	$(CC) $^ $(LDFLAGS) -o "$@"
 
+kupyna_test.o: kupyna_test.c
+	$(CC) $(CPPFLAGS) -std=c11 $(CFLAGS) -c "$<" -o "$@"
+
 %.o: %.c
 	$(CC) $(CPPFLAGS) -std=c99 $(CFLAGS) -c "$<" -o "$@"
 

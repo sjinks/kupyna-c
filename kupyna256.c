@@ -230,25 +230,7 @@ void kupyna256_update_aligned(struct kupyna256_ctx_t* ctx, const uint8_t* data, 
 
 void kupyna256_final(struct kupyna256_ctx_t* ctx, uint8_t* hash)
 {
-    ctx->m.b[ctx->pos] = 0x80;
-    ++ctx->pos;
-    if (ctx->pos > 52) {
-        memset(ctx->m.b + ctx->pos, 0, 64 - ctx->pos);
-        transform(ctx, &ctx->m);
-        ctx->pos = 0;
-    }
-
-    memset(ctx->m.b + ctx->pos, 0,           64 - ctx->pos);
-    memcpy(ctx->m.b + 52,       &ctx->total, sizeof(uint64_t));
-
-    transform(ctx, &ctx->m);
-    outputTransform(ctx);
-
-    memcpy(hash, ctx->h.b + 64 - 256/8, 256/8);
-
-#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
-    _mm_empty();
-#endif
+    kupyna256_final2(ctx, hash, 256);
 }
 
 void kupyna256_final2(struct kupyna256_ctx_t* ctx, uint8_t* hash, size_t bits)
