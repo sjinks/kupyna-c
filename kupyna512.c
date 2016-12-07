@@ -228,7 +228,7 @@ void kupyna512_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t l
     }
 
     while (len >= 128) {
-        memcpy(ctx->m.b + ctx->pos, data, 128);
+        memcpy(ctx->m.b, data, 128);
         transform(ctx, &ctx->m);
         len     -= 128;
         data    += 128;
