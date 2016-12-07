@@ -230,8 +230,8 @@ void kupyna512_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t l
     while (len >= 128) {
         memcpy(ctx->m.b, data, 128);
         transform(ctx, &ctx->m);
-        len     -= 128;
-        data    += 128;
+        len  -= 128;
+        data += 128;
     }
 
     if (len) {
@@ -260,7 +260,7 @@ void kupyna512_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, 
     }
 
     while (len >= 128) {
-        transform(ctx, (union uint1024_t*)data);
+        transform(ctx, (const union uint1024_t*)data);
         len  -= 128;
         data += 128;
     }

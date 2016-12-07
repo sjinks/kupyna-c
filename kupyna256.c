@@ -181,18 +181,29 @@ void kupyna256_init(struct kupyna256_ctx_t* ctx)
 
 void kupyna256_update(struct kupyna256_ctx_t* ctx, const uint8_t* data, size_t len)
 {
-    while (ctx->pos + len >= 64) {
+    size_t l = len;
+
+    if (ctx->pos && ctx->pos + len >= 64) {
         memcpy(ctx->m.b + ctx->pos, data, 64 - ctx->pos);
         transform(ctx, &ctx->m);
-        len        -= 64 - ctx->pos;
-        ctx->total += (64 - ctx->pos) * 8;
-        data       += 64 - ctx->pos;
-        ctx->pos    = 0;
+        len     -= 64 - ctx->pos;
+        data    += 64 - ctx->pos;
+        ctx->pos = 0;
     }
 
-    memcpy(ctx->m.b + ctx->pos, data, len);
-    ctx->pos   += len;
-    ctx->total += len * 8;
+    while (len >= 64) {
+        memcpy(ctx->m.b, data, 64);
+        transform(ctx, &ctx->m);
+        len  -= 64;
+        data += 64;
+    }
+
+    if (len) {
+        memcpy(ctx->m.b + ctx->pos, data, len);
+        ctx->pos += len;
+    }
+
+    ctx->total += l * 8;
 
 #if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
@@ -201,27 +212,29 @@ void kupyna256_update(struct kupyna256_ctx_t* ctx, const uint8_t* data, size_t l
 
 void kupyna256_update_aligned(struct kupyna256_ctx_t* ctx, const uint8_t* data, size_t len)
 {
+    size_t l = len;
     assert(((size_t)data & 0x0F) == 0);
 
     if (ctx->pos && ctx->pos + len >= 64) {
         memcpy(ctx->m.b + ctx->pos, data, 64 - ctx->pos);
         transform(ctx, &ctx->m);
-        len        -= 64 - ctx->pos;
-        ctx->total += (64 - ctx->pos) * 8;
-        data       += 64 - ctx->pos;
-        ctx->pos    = 0;
+        len     -= 64 - ctx->pos;
+        data    += 64 - ctx->pos;
+        ctx->pos = 0;
     }
 
     while (len >= 64) {
-        transform(ctx, (union uint512_t*)data);
-        len        -= 64;
-        ctx->total += 64  * 8;
-        data       += 64;
+        transform(ctx, (const union uint512_t*)data);
+        len  -= 64;
+        data += 64;
     }
 
-    memcpy(ctx->m.b + ctx->pos, data, len);
-    ctx->pos   += len;
-    ctx->total += len * 8;
+    if (len) {
+        memcpy(ctx->m.b + ctx->pos, data, len);
+        ctx->pos += len;
+    }
+
+    ctx->total += l * 8;
 
 #if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();

@@ -26,7 +26,7 @@ _Alignas(16) static const uint8_t test[2048 / 8] = {
 
 static uint8_t result[512/8];
 
-static const uint8_t zero[1048576];
+_Alignas(16) static const uint8_t zero[1048576];
 
 static void kupyna256_chunk()
 {
@@ -81,6 +81,12 @@ static void kupyna256_chunk()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, zero, 64);
     kupyna256_update(&ctx, zero + 64, 53);
+    kupyna256_final2(&ctx, r1, 257);
+    CU_ASSERT(!memcmp(result, r1, 32));
+
+    kupyna256_init(&ctx);
+    kupyna256_update(&ctx, zero, 64);
+    kupyna256_update_aligned(&ctx, zero + 64, 53);
     kupyna256_final2(&ctx, r1, 257);
     CU_ASSERT(!memcmp(result, r1, 32));
 }
@@ -254,6 +260,12 @@ static void kupyna512_chunk()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, zero, 128);
     kupyna512_update(&ctx, zero + 128, 117);
+    kupyna512_final2(&ctx, r1, 513);
+    CU_ASSERT(!memcmp(result, r1, 32));
+
+    kupyna512_init(&ctx);
+    kupyna512_update(&ctx, zero, 128);
+    kupyna512_update_aligned(&ctx, zero + 128, 117);
     kupyna512_final2(&ctx, r1, 513);
     CU_ASSERT(!memcmp(result, r1, 32));
 }
