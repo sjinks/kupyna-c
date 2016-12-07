@@ -6,6 +6,8 @@
 #include <emmintrin.h>
 #elif defined(__SSE__)
 #include <xmmintrin.h>
+#elif defined(__MMX__)
+#include <mmintrin.h>
 #endif
 
 union uint1024_t {
@@ -13,6 +15,8 @@ union uint1024_t {
     __m128i h[8];
 #elif defined(__SSE__)
     __m128 h[8];
+#elif defined(__MMX__)
+    __m64 mq[16];
 #endif
     uint64_t q[16];
     uint8_t b[128];
@@ -27,6 +31,7 @@ struct kupyna512_ctx_t {
 
 void kupyna512_init(struct kupyna512_ctx_t* ctx);
 void kupyna512_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len);
+void kupyna512_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len);
 void kupyna512_final(struct kupyna512_ctx_t* ctx, uint8_t* hash);
 void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits);
 

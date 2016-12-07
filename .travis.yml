@@ -13,7 +13,7 @@ dist: trusty
 before_install:
   - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
   - sudo apt-get -qq update
-  - sudo apt-get -qq -y install libcunit1-dev
+  - sudo apt-get -qq -y install libcunit1-dev g++-multilib libc6-dev-i386
 
 addons:
   coverity_scan:
