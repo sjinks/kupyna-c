@@ -444,6 +444,27 @@ static void kmac256()
     memset(k, 0xFF, 256/8);
     kupyna256_kmac(k, test, 2048/8, result);
     CU_ASSERT(!memcmp(result, expected, 32));
+
+    struct kupyna256_kmac_ctx_t ctx;
+
+    kupyna256_kmac_init(&ctx, k);
+    kupyna256_kmac_update(&ctx, test, 2048/8);
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna256_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna256_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna256_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna256_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 }
 
 static void kmac384()
@@ -458,6 +479,27 @@ static void kmac384()
     memset(k, 0xFF, 384/8);
     kupyna384_kmac(k, test, 2048/8, result);
     CU_ASSERT(!memcmp(result, expected, 48));
+
+    struct kupyna384_kmac_ctx_t ctx;
+
+    kupyna384_kmac_init(&ctx, k);
+    kupyna384_kmac_update(&ctx, test, 2048/8);
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna384_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna384_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna384_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna384_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 }
 
 static void kmac512()
@@ -473,6 +515,27 @@ static void kmac512()
     memset(k, 0xFF, 512/8);
     kupyna512_kmac(k, test, 2048/8, result);
     CU_ASSERT(!memcmp(result, expected, 64));
+
+    struct kupyna512_kmac_ctx_t ctx;
+
+    kupyna512_kmac_init(&ctx, k);
+    kupyna512_kmac_update(&ctx, test, 2048/8);
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna512_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna512_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna512_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna512_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 }
 
 int main(int argc, char** argv)
