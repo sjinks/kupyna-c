@@ -129,10 +129,6 @@ void kupyna512_kmac(const uint8_t* key, const uint8_t* data, size_t len, uint8_t
     pad512(key,  512 / 8, &k);
     pad512(data, len,     &m);
 
-    if (k.data_nbytes > 0) {
-        kupyna512_update(&ctx, key, k.data_nbytes);
-    }
-
     kupyna512_update(&ctx, k.padding, k.pad_nbytes);
 
     if (m.data_nbytes > 0) {
