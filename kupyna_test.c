@@ -431,6 +431,16 @@ static void kupyna384_760()
     kupyna512_update_aligned(&ctx, test, 760 / 8);
     kupyna512_final2(&ctx, result, 384);
     CU_ASSERT(!memcmp(result, expected, 48));
+
+    kupyna384_init(&ctx);
+    kupyna384_update(&ctx, test, 760 / 8);
+    kupyna384_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 48));
+
+    kupyna384_init(&ctx);
+    kupyna384_update_aligned(&ctx, test, 760 / 8);
+    kupyna384_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 48));
 }
 
 static void kmac256()

@@ -308,3 +308,23 @@ void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits)
     _mm_empty();
 #endif
 }
+
+void kupyna384_init(struct kupyna512_ctx_t* ctx)
+{
+    kupyna512_init(ctx);
+}
+
+void kupyna384_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len)
+{
+    kupyna512_update(ctx, data, len);
+}
+
+void kupyna384_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len)
+{
+    kupyna512_update_aligned(ctx, data, len);
+}
+
+void kupyna384_final(struct kupyna512_ctx_t* ctx, uint8_t* hash)
+{
+    kupyna512_final2(ctx, hash, 384);
+}
