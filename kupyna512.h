@@ -35,4 +35,9 @@ void kupyna512_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, 
 void kupyna512_final(struct kupyna512_ctx_t* ctx, uint8_t* hash);
 void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits);
 
+void kupyna384_init(struct kupyna512_ctx_t* ctx);
+void kupyna384_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len);
+void kupyna384_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len);
+void kupyna384_final(struct kupyna512_ctx_t* ctx, uint8_t* hash);
+
 #endif /* KUPYNA512_H_ */

@@ -230,8 +230,8 @@ void kupyna512_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t l
     while (len >= 128) {
         memcpy(ctx->m.b, data, 128);
         transform(ctx, &ctx->m);
-        len     -= 128;
-        data    += 128;
+        len  -= 128;
+        data += 128;
     }
 
     if (len) {
@@ -260,7 +260,7 @@ void kupyna512_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, 
     }
 
     while (len >= 128) {
-        transform(ctx, (union uint1024_t*)data);
+        transform(ctx, (const union uint1024_t*)data);
         len  -= 128;
         data += 128;
     }
@@ -279,25 +279,7 @@ void kupyna512_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, 
 
 void kupyna512_final(struct kupyna512_ctx_t* ctx, uint8_t* hash)
 {
-    ctx->m.b[ctx->pos] = 0x80;
-    ++ctx->pos;
-    if (ctx->pos > 116) {
-        memset(ctx->m.b + ctx->pos, 0, 128 - ctx->pos);
-        transform(ctx, &ctx->m);
-        ctx->pos = 0;
-    }
-
-    memset(ctx->m.b + ctx->pos, 0,           128 - ctx->pos);
-    memcpy(ctx->m.b + 116,      &ctx->total, sizeof(uint64_t));
-
-    transform(ctx, &ctx->m);
-    outputTransform(ctx);
-
-    memcpy(hash, ctx->h.b + 128 - 512/8, 512/8);
-
-#if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
-    _mm_empty();
-#endif
+    kupyna512_final2(ctx, hash, 512);
 }
 
 void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits)
@@ -325,4 +307,24 @@ void kupyna512_final2(struct kupyna512_ctx_t* ctx, uint8_t* hash, size_t bits)
 #if (defined(__MMX__) || defined(__SSE__) || defined(__SSE2__))
     _mm_empty();
 #endif
+}
+
+void kupyna384_init(struct kupyna512_ctx_t* ctx)
+{
+    kupyna512_init(ctx);
+}
+
+void kupyna384_update(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len)
+{
+    kupyna512_update(ctx, data, len);
+}
+
+void kupyna384_update_aligned(struct kupyna512_ctx_t* ctx, const uint8_t* data, size_t len)
+{
+    kupyna512_update_aligned(ctx, data, len);
+}
+
+void kupyna384_final(struct kupyna512_ctx_t* ctx, uint8_t* hash)
+{
+    kupyna512_final2(ctx, hash, 384);
 }

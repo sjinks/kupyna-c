@@ -3,9 +3,10 @@
 #include <CUnit/Basic.h>
 #include "kupyna256.h"
 #include "kupyna512.h"
+#include "kupyna_kmac.h"
 
-static const uint8_t test_8[1] = { 0xFF };
-static const uint8_t test[2048 / 8] = {
+_Alignas(16) static const uint8_t test_8[1] = { 0xFF };
+_Alignas(16) static const uint8_t test[2048 / 8] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
     0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
     0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -26,7 +27,7 @@ static const uint8_t test[2048 / 8] = {
 
 static uint8_t result[512/8];
 
-static const uint8_t zero[1048576];
+_Alignas(16) static const uint8_t zero[1048576];
 
 static void kupyna256_chunk()
 {
@@ -83,6 +84,12 @@ static void kupyna256_chunk()
     kupyna256_update(&ctx, zero + 64, 53);
     kupyna256_final2(&ctx, r1, 257);
     CU_ASSERT(!memcmp(result, r1, 32));
+
+    kupyna256_init(&ctx);
+    kupyna256_update(&ctx, zero, 16);
+    kupyna256_update_aligned(&ctx, zero + 16, 101);
+    kupyna256_final2(&ctx, r1, 257);
+    CU_ASSERT(!memcmp(result, r1, 32));
 }
 
 static void kupyna256_512()
@@ -96,7 +103,11 @@ static void kupyna256_512()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test, 512 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test, 512 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -141,7 +152,11 @@ static void kupyna256_8()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test_8, 8 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test_8, 8 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -156,7 +171,11 @@ static void kupyna256_760()
     kupyna256_init(&ctx);
     kupyna256_update(&ctx, test, 760 / 8);
     kupyna256_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 
+    kupyna256_init(&ctx);
+    kupyna256_update_aligned(&ctx, test, 760 / 8);
+    kupyna256_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 32));
 }
 
@@ -244,6 +263,12 @@ static void kupyna512_chunk()
     kupyna512_update(&ctx, zero + 128, 117);
     kupyna512_final2(&ctx, r1, 513);
     CU_ASSERT(!memcmp(result, r1, 32));
+
+    kupyna512_init(&ctx);
+    kupyna512_update(&ctx, zero, 16);
+    kupyna512_update_aligned(&ctx, zero + 16, 229);
+    kupyna512_final2(&ctx, r1, 513);
+    CU_ASSERT(!memcmp(result, r1, 32));
 }
 
 static void kupyna512_512()
@@ -259,7 +284,11 @@ static void kupyna512_512()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 512 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 512 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -276,7 +305,11 @@ static void kupyna512_1024()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1024 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1024 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -293,7 +326,11 @@ static void kupyna512_2048()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 2048 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 2048 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -310,7 +347,11 @@ static void kupyna512_8()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test_8, 8 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test_8, 8 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -327,7 +368,11 @@ static void kupyna512_1536()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1536 / 8);
     kupyna512_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1536 / 8);
+    kupyna512_final(&ctx, result);
     CU_ASSERT(!memcmp(result, expected, 64));
 }
 
@@ -360,7 +405,11 @@ static void kupyna304_1024()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 1024 / 8);
     kupyna512_final2(&ctx, result, 304);
+    CU_ASSERT(!memcmp(result, expected, 38));
 
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 1024 / 8);
+    kupyna512_final2(&ctx, result, 304);
     CU_ASSERT(!memcmp(result, expected, 38));
 }
 
@@ -376,8 +425,127 @@ static void kupyna384_760()
     kupyna512_init(&ctx);
     kupyna512_update(&ctx, test, 760 / 8);
     kupyna512_final2(&ctx, result, 384);
-
     CU_ASSERT(!memcmp(result, expected, 48));
+
+    kupyna512_init(&ctx);
+    kupyna512_update_aligned(&ctx, test, 760 / 8);
+    kupyna512_final2(&ctx, result, 384);
+    CU_ASSERT(!memcmp(result, expected, 48));
+
+    kupyna384_init(&ctx);
+    kupyna384_update(&ctx, test, 760 / 8);
+    kupyna384_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 48));
+
+    kupyna384_init(&ctx);
+    kupyna384_update_aligned(&ctx, test, 760 / 8);
+    kupyna384_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 48));
+}
+
+static void kmac256()
+{
+    static const uint8_t expected[256/8] = {
+        0xA0, 0xB5, 0xD5, 0xBC, 0xF9, 0x5D, 0x75, 0xA8, 0x09, 0xB0, 0x5A, 0x01, 0x88, 0x74, 0xB4, 0x34,
+        0x19, 0x4B, 0x61, 0x84, 0x35, 0xC7, 0xFD, 0x09, 0x01, 0xD1, 0xD2, 0x34, 0xB5, 0xE6, 0xB0, 0xDB
+    };
+
+    uint8_t k[256/8];
+    memset(k, 0xFF, 256/8);
+    kupyna256_kmac(k, test, 2048/8, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    struct kupyna256_kmac_ctx_t ctx;
+
+    kupyna256_kmac_init(&ctx, k);
+    kupyna256_kmac_update(&ctx, test, 2048/8);
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna256_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna256_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna256_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna256_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna256_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+}
+
+static void kmac384()
+{
+    static const uint8_t expected[384/8] = {
+        0x5A, 0x27, 0x92, 0x50, 0x90, 0xD5, 0x79, 0xEA, 0x75, 0x6F, 0x57, 0xC4, 0x31, 0x8B, 0x0B, 0xFE,
+        0xA6, 0x39, 0xA9, 0x57, 0x98, 0xDB, 0xE2, 0x91, 0x5C, 0x7A, 0xEF, 0xB9, 0x0F, 0x08, 0x2B, 0xBE,
+        0xA4, 0x9B, 0x42, 0x3A, 0x73, 0xE3, 0x04, 0xAC, 0x41, 0x0B, 0x9E, 0xF6, 0xAE, 0xFE, 0x54, 0x09
+    };
+
+    uint8_t k[384/8];
+    memset(k, 0xFF, 384/8);
+    kupyna384_kmac(k, test, 2048/8, result);
+    CU_ASSERT(!memcmp(result, expected, 48));
+
+    struct kupyna384_kmac_ctx_t ctx;
+
+    kupyna384_kmac_init(&ctx, k);
+    kupyna384_kmac_update(&ctx, test, 2048/8);
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna384_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna384_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna384_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna384_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna384_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+}
+
+static void kmac512()
+{
+    static const uint8_t expected[512/8] = {
+        0x1A, 0xE8, 0xA6, 0x3B, 0xFB, 0xDE, 0xB4, 0xF4, 0xB0, 0xE7, 0x39, 0x82, 0x7C, 0xA2, 0xBC, 0x6A,
+        0x87, 0xF7, 0xA7, 0xE9, 0x21, 0x87, 0xD9, 0x26, 0xD1, 0x9B, 0x9B, 0xCF, 0x4D, 0x59, 0xD7, 0x8F,
+        0xB9, 0xA0, 0xD0, 0x5A, 0x14, 0xC0, 0xEE, 0x0C, 0x9A, 0x11, 0x3A, 0x68, 0x1B, 0x7C, 0x8C, 0x65,
+        0x15, 0xC9, 0x60, 0xD3, 0x02, 0xAF, 0x2D, 0xB5, 0xDD, 0xCF, 0xE9, 0xB2, 0x48, 0xC4, 0xCD, 0x8A
+    };
+
+    uint8_t k[512/8];
+    memset(k, 0xFF, 512/8);
+    kupyna512_kmac(k, test, 2048/8, result);
+    CU_ASSERT(!memcmp(result, expected, 64));
+
+    struct kupyna512_kmac_ctx_t ctx;
+
+    kupyna512_kmac_init(&ctx, k);
+    kupyna512_kmac_update(&ctx, test, 2048/8);
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna512_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; ++i) {
+        kupyna512_kmac_update(&ctx, test+i, 1);
+    }
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
+
+    kupyna512_kmac_init(&ctx, k);
+    for (int i=0; i<2048/8; i+=16) {
+        kupyna512_kmac_update(&ctx, test+i, 16);
+    }
+    kupyna512_kmac_final(&ctx, result);
+    CU_ASSERT(!memcmp(result, expected, 32));
 }
 
 int main(int argc, char** argv)
@@ -411,9 +579,15 @@ int main(int argc, char** argv)
     CU_pSuite suite_k384 = CU_add_suite("Kupyna-384", NULL, NULL);
     CU_ADD_TEST(suite_k384, kupyna384_760);
 
+    CU_pSuite suite_kmac = CU_add_suite("KMAC", NULL, NULL);
+    CU_ADD_TEST(suite_kmac, kmac256);
+    CU_ADD_TEST(suite_kmac, kmac384);
+    CU_ADD_TEST(suite_kmac, kmac512);
+
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();
 
     CU_cleanup_registry();
+
     return CU_get_number_of_tests_failed() ? EXIT_FAILURE : EXIT_SUCCESS;
 }
