@@ -101,7 +101,10 @@ jobs:
           name: coverage-raw
           path: coverage-raw
 
-      - run: ls -laR
+      - name: Upload to codecov
+        run: /bin/bash <(curl -s https://codecov.io/bash) -s coverage-raw/ -s coverage-sse/ -s coverage-sse2/ -X gcov
+        with:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   benchmark:
     needs: ci
