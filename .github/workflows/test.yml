@@ -38,7 +38,7 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     env:
-      LDFLAGS: "--coverage"
+      LDFLAGS: --coverage
       CC: gcc
     strategy:
       fail-fast: true
@@ -62,7 +62,7 @@ jobs:
         run: sudo apt-get -qq update && sudo apt-get -qq install libcunit1-dev
 
       - name: Build
-        run: make CFLAGS="-Wall -O0 --coverage ${{ matrix.flavor.flags }}" LDFLAGS="--coverage"
+        run: make CFLAGS="-Wall -O0 --coverage ${{ matrix.flavor.flags }}"
 
       - name: Generate test coverage
         run: |
@@ -70,6 +70,38 @@ jobs:
           mkdir ${{ matrix.flavor.dir }}
           mv *.gcov ${{ matrix.flavor.dir }}/
           rm -f *.gcno *.gcda
+
+      - name: Save the coverage
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: ${{ matrix.flavor.dir }}
+          path: ${{ matrix.flavor.dir }}
+          retention-days: 1
+
+  upload-coverage:
+    name: Upload coverage to codecov.io
+    needs: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download (SSE2)
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: coverage-sse2
+          path: coverage-sse2
+
+      - name: Download (SSE)
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: coverage-sse
+          path: coverage-sse
+
+      - name: Download (Raw)
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: coverage-raw
+          path: coverage-raw
+
+      - run: ls -laR
 
   benchmark:
     needs: ci
@@ -103,7 +135,7 @@ jobs:
               name: 64-bit
             FLAGS:
               name: Raw
-    name: Benchmarck (${{ matrix.ARCH.name }}, ${{ matrix.FLAGS.name }})
+    name: Benchmarck (${{ matrix.CC }}, ${{ matrix.ARCH.name }}, ${{ matrix.FLAGS.name }})
     steps:
       - name: Check out the source code
         uses: actions/checkout@v2
