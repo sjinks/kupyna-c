@@ -67,12 +67,10 @@ jobs:
       - name: Generate test coverage
         run: |
           gcov *.c
-          mkdir ${{ matrix.flavor.dir }}
-          mv *.gcov ${{ matrix.flavor.dir }}/
           rm -f *.gcno *.gcda
 
       - name: Upload to codecov
-        run: /bin/bash <(curl -s https://codecov.io/bash) -s ${{ matrix.flavor.dir }}/ -X gcov
+        run: /bin/bash <(curl -s https://codecov.io/bash) -X gcov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
