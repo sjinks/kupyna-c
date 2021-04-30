@@ -1,0 +1,116 @@
+name: Build
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+env:
+  CFLAGS: "-O2 -Wall -Werror"
+
+jobs:
+  ci:
+    if: ${{ !contains(github.event.head_commit.message, '[ci skip]') || github.event_name == 'workflow_dispatch' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler:
+          - CC: gcc
+          - CC: clang
+    name: "Build (${{ matrix.compiler.CC }})"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: apt-get -qq update && apt-get -qq install libcunit1-dev
+
+      - name: Add error matcher
+        run: echo "::add-matcher::$(pwd)/.github/problem-matcher-gcc.json"
+
+      - name: Build
+        run: make CC=${{ matrix.compiler.CC }}
+
+      - name: Test
+        run: make test
+
+  coverage:
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      LDFLAGS: "--coverage"
+      CC: gcc
+    strategy:
+      fail-fast: true
+      matrix:
+        flavor:
+          - flags: ""
+            dir: coverage-sse2
+            name: SSE2
+          - flags: "-mno-sse2"
+            dir: coverage-sse
+            name: SSE
+          - flags: -mno-mmx -mno-sse -mno-sse2
+            dir: coverage-raw
+            name: Raw
+    name: Generate coverage (${{ matrix.flavor.name }})
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: apt-get -qq update && apt-get -qq install libcunit1-dev
+
+      - name: Build
+        run: make CFLAGS="-Wall -O0 --coverage ${{ matrix.flavor.flags }}" LDFLAGS="--coverage"
+
+      - name: Generate test coverage
+        run: |
+          gcov *.c
+          mkdir ${{ matrix.flavor.dir }}
+          mv *.gcov ${{ matrix.flavor.dir }}/
+          rm -f *.gcno *.gcda
+
+  benchmark:
+    needs: ci
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        CC:
+          - clang
+          - gcc
+        ARCH:
+          - name: 32-bit
+            flags: -m32
+          - name: 64-bit
+            flags: ""
+        FLAGS:
+          - name: SSE2
+            flags: -msse2
+          - name: SSE
+            flags: -mno-sse2 -msse
+          - name: MMX
+            flags: -mno-sse2 -mno-sse -mmmx
+          - name: Raw
+            flags: -mno-sse2 -mno-sse -mno-mmx
+        exclude:
+          - ARCH:
+              name: 64-bit
+            FLAGS:
+              name: MMX
+          - ARCH:
+              name: 64-bit
+            FLAGS:
+              name: Raw
+    name: Benchmarck (${{ matrix.ARCH.name }}, ${{ matrix.FLAGS.name }})
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: apt-get -qq update && apt-get -qq install g++-multilib libc6-dev-i386
+
+      - name: Run benchmark
+        run: make -s CFLAGS="-std=c11 -Wall -O2 ${{ matrix.FLAGS.flags }} ${{ matrix.ARCH.flags }}" LDFLAGS="${{ matrix.ARCH.flags }}" benchmark
