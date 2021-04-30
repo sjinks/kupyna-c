@@ -1,4 +1,8 @@
-# kupyna-c [![Build Status](https://travis-ci.org/sjinks/kupyna-c.png?branch=master)](https://travis-ci.org/sjinks/kupyna-c) [![codecov](https://codecov.io/gh/sjinks/kupyna-c/branch/master/graph/badge.svg)](https://codecov.io/gh/sjinks/kupyna-c) [![Coverity Scan Build Status](https://scan.coverity.com/projects/11055/badge.svg)](https://scan.coverity.com/projects/sjinks-kupyna-c)
+# kupyna-c
+
+[![Build and Test](https://github.com/sjinks/kupyna-c/actions/workflows/test.yml/badge.svg)](https://github.com/sjinks/kupyna-c/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/sjinks/kupyna-c/branch/master/graph/badge.svg)](https://codecov.io/gh/sjinks/kupyna-c)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/11055/badge.svg)](https://scan.coverity.com/projects/sjinks-kupyna-c)
 
 Implementation of the Kupyna hash function (DSTU 7564:2014) inspired by [this project](https://github.com/Roman-Oliynykov/Kupyna-reference).
 
