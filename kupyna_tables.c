@@ -1,6 +1,6 @@
 #include "kupyna_tables.h"
 
-const uint64_t T0[256] = {
+const uint64_t T0[256] = { /* lgtm[cpp/short-global-name] */
     0xa832a829d77f9aa8ull, 0x4352432297d41143ull, 0x5f3e5fc2df80615full, 0x061e063014121806ull,
     0x6bda6b7f670cb16bull, 0x75bc758f2356c975ull, 0x6cc16c477519ad6cull, 0x592059f2cb927959ull,
     0x71a871af3b4ad971ull, 0xdf84dfb6f8275bdfull, 0x87a1874c35b22687ull, 0x95fb95dc59cc6e95ull,
@@ -67,7 +67,7 @@ const uint64_t T0[256] = {
     0x7c917cc71569ed7cull, 0x8b9d8b2c1d96168bull, 0x5613568ae9bf4556ull, 0x80ba807427a73a80ull
 };
 
-const uint64_t T1[256] = {
+const uint64_t T1[256] = { /* lgtm[cpp/short-global-name] */
     0xd1ce3e9e501fceceull, 0x6dbbb1bd06d6bbbbull, 0x60eb0b40ab8bebebull, 0xe092e44bd9729292ull,
     0x65ea0346ac8feaeaull, 0xc0cb16804b0bcbcbull, 0x5f13986a794c1313ull, 0xe2c146bc7d23c1c1ull,
     0x6ae91b4ca583e9e9ull, 0xd23acd9ca6e83a3aull, 0xa9d6fece187fd6d6ull, 0x40b2f98b39f2b2b2ull,
@@ -134,7 +134,7 @@ const uint64_t T1[256] = {
     0xfcc776a86f3bc7c7ull, 0xe7c04eba7a27c0c0ull, 0x8d2955f6dfa42929ull, 0xacd7f6c81f7bd7d7ull
 };
 
-const uint64_t T2[256] = {
+const uint64_t T2[256] = { /* lgtm[cpp/short-global-name] */
     0x93ec4dde769393e5ull, 0xd986ec3543d9d99aull, 0x9aa47be1529a9ac8ull, 0xb5c1992ceeb5b55bull,
     0x98b477ef5a9898c2ull, 0x220dccee882222aaull, 0x451283c60945454cull, 0xfcb332ced7fcfc2bull,
     0xbab9bb01d2baba68ull, 0x6a77610bb56a6adfull, 0xdfb6f8275bdfdf84ull, 0x02100c0e0802020aull,
@@ -201,7 +201,7 @@ const uint64_t T2[256] = {
     0xf8932ad2c7f8f83full, 0x0c602824300c0c3cull, 0x74872551cd7474b9ull, 0x671f4f28816767e6ull
 };
 
-const uint64_t T3[256] = {
+const uint64_t T3[256] = { /* lgtm[cpp/short-global-name] */
     0x676d05bd6868d568ull, 0x1c09840e8d8d838dull, 0x1e864c0fcacac5caull, 0x52b3fe294d4d644dull,
     0xbf3744d17373a273ull, 0x62a7ec314b4b7a4bull, 0x4ab9f7254e4e6b4eull, 0x4dfcd6a82a2a822aull,
     0xeec21677d4d4a3d4ull, 0xaaf1a35552520752ull, 0x2dd4f2982626be26ull, 0xf18d3ef6b3b345b3ull,
@@ -268,7 +268,7 @@ const uint64_t T3[256] = {
     0x82efb84157571657ull, 0xd85a416c1b1b771bull, 0x537a9aa7e0e047e0ull, 0x2f5b3a996161f861ull
 };
 
-const uint64_t T4[256] = {
+const uint64_t T4[256] = { /* lgtm[cpp/short-global-name] */
     0xd77f9aa8a832a829ull, 0x97d4114343524322ull, 0xdf80615f5f3e5fc2ull, 0x14121806061e0630ull,
     0x670cb16b6bda6b7full, 0x2356c97575bc758full, 0x7519ad6c6cc16c47ull, 0xcb927959592059f2ull,
     0x3b4ad97171a871afull, 0xf8275bdfdf84dfb6ull, 0x35b2268787a1874cull, 0x59cc6e9595fb95dcull,
@@ -335,7 +335,7 @@ const uint64_t T4[256] = {
     0x1569ed7c7c917cc7ull, 0x1d96168b8b9d8b2cull, 0xe9bf45565613568aull, 0x27a73a8080ba8074ull
 };
 
-const uint64_t T5[256] = {
+const uint64_t T5[256] = { /* lgtm[cpp/short-global-name] */
     0x501fceced1ce3e9eull, 0x06d6bbbb6dbbb1bdull, 0xab8bebeb60eb0b40ull, 0xd9729292e092e44bull,
     0xac8feaea65ea0346ull, 0x4b0bcbcbc0cb1680ull, 0x794c13135f13986aull, 0x7d23c1c1e2c146bcull,
     0xa583e9e96ae91b4cull, 0xa6e83a3ad23acd9cull, 0x187fd6d6a9d6feceull, 0x39f2b2b240b2f98bull,
@@ -402,7 +402,7 @@ const uint64_t T5[256] = {
     0x6f3bc7c7fcc776a8ull, 0x7a27c0c0e7c04ebaull, 0xdfa429298d2955f6ull, 0x1f7bd7d7acd7f6c8ull
 };
 
-const uint64_t T6[256] = {
+const uint64_t T6[256] = { /* lgtm[cpp/short-global-name] */
     0x769393e593ec4ddeull, 0x43d9d99ad986ec35ull, 0x529a9ac89aa47be1ull, 0xeeb5b55bb5c1992cull,
     0x5a9898c298b477efull, 0x882222aa220dcceeull, 0x0945454c451283c6ull, 0xd7fcfc2bfcb332ceull,
     0xd2baba68bab9bb01ull, 0xb56a6adf6a77610bull, 0x5bdfdf84dfb6f827ull, 0x0802020a02100c0eull,
@@ -469,7 +469,7 @@ const uint64_t T6[256] = {
     0xc7f8f83ff8932ad2ull, 0x300c0c3c0c602824ull, 0xcd7474b974872551ull, 0x816767e6671f4f28ull
 };
 
-const uint64_t T7[256] = {
+const uint64_t T7[256] = { /* lgtm[cpp/short-global-name] */
     0x6868d568676d05bdull, 0x8d8d838d1c09840eull, 0xcacac5ca1e864c0full, 0x4d4d644d52b3fe29ull,
     0x7373a273bf3744d1ull, 0x4b4b7a4b62a7ec31ull, 0x4e4e6b4e4ab9f725ull, 0x2a2a822a4dfcd6a8ull,
     0xd4d4a3d4eec21677ull, 0x52520752aaf1a355ull, 0x2626be262dd4f298ull, 0xb3b345b3f18d3ef6ull,
