@@ -7,6 +7,8 @@ on:
 
 jobs:
   ci:
+    permissions:
+      contents: read
     if: ${{ !contains(github.event.head_commit.message, '[ci skip]') || github.event_name == 'workflow_dispatch' }}
     strategy:
       fail-fast: true
@@ -35,6 +37,8 @@ jobs:
         run: make test
 
   coverage:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     env:
       LDFLAGS: --coverage
@@ -72,6 +76,8 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   benchmark:
+    permissions:
+      contents: read
     needs: ci
     runs-on: ubuntu-latest
     strategy:
