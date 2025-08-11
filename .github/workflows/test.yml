@@ -22,7 +22,7 @@ jobs:
       CFLAGS: "-O2 -Wall -Werror"
     steps:
       - name: Check out the source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get -qq update && sudo apt-get -qq install libcunit1-dev
@@ -59,7 +59,7 @@ jobs:
     name: Generate coverage (${{ matrix.flavor.name }})
     steps:
       - name: Check out the source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get -qq update && sudo apt-get -qq install libcunit1-dev
@@ -112,7 +112,7 @@ jobs:
     name: Benchmarck (${{ matrix.CC }}, ${{ matrix.ARCH.name }}, ${{ matrix.FLAGS.name }})
     steps:
       - name: Check out the source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: sudo apt-get -qq update && sudo apt-get -qq install g++-multilib libc6-dev-i386
